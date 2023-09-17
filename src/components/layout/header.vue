@@ -42,7 +42,6 @@ function logout() {
       }, 1000);
     }
   });
-  //
 }
 </script>
 
