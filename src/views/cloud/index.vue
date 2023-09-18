@@ -12,6 +12,7 @@
       />
     </div>
   </div>
+  <MatchByName ref="matchByName" :row="rowData" />
 </template>
 
 <script setup>
@@ -19,12 +20,20 @@ import * as cloudApi from "@/api/cloud";
 import { h, onMounted, reactive, ref } from "vue";
 import { getMebibyteStr, formatDate } from "@/utils";
 import { NButton, useDialog, useMessage } from "naive-ui";
+import MatchByName from "@/components/match/name.vue";
 
 const message = useMessage();
 const dialog = useDialog();
 
+// 是否显示匹配弹窗
+const rowData = ref({});
+const matchByName = ref(null);
+
 // 匹配歌曲信息
-function match() {}
+function match(row) {
+  rowData.value = row;
+  matchByName.value.openModal();
+}
 
 // 删除
 function remove(row) {
@@ -45,6 +54,13 @@ function remove(row) {
   });
 }
 
+// 获取歌手名称
+function getArtistName(row) {
+  const artist = row.simpleSong.ar;
+  if (artist.length > 0) return artist.map((item) => item.name).join("/");
+  return row.artist;
+}
+
 // 表格配置
 const table = reactive({
   loading: false,
@@ -57,11 +73,12 @@ const table = reactive({
     },
     {
       title: "歌曲名",
-      key: "songName"
+      key: "simpleSong.name"
     },
     {
       title: "歌手",
-      key: "artist"
+      key: "artist",
+      render: (row) => getArtistName(row)
     },
     {
       title: "专辑",
