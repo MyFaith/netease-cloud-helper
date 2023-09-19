@@ -28,6 +28,8 @@ const menuList = [
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--color-border);
+  height: 100vh;
+  overflow: hidden;
   .menu-item {
     padding: 10px 0;
     color: var(--color-text);

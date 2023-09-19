@@ -2,14 +2,8 @@
   <div class="cloud">
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
-      <n-pagination
-        v-model:page="pagination.page"
-        v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount"
-        show-size-picker
-        :page-sizes="[10, 20, 30]"
-        :on-update:page="changePage"
-      />
+      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount" show-size-picker :page-sizes="[10, 20, 30]" :on-update:page="changePage" />
     </div>
   </div>
   <MatchByName ref="matchByName" :row="rowData" />
@@ -19,7 +13,7 @@
 import * as cloudApi from "@/api/cloud";
 import { h, onMounted, reactive, ref } from "vue";
 import { getMebibyteStr, formatDate } from "@/utils";
-import { NButton, useDialog, useMessage } from "naive-ui";
+import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
 import MatchByName from "@/components/match/name.vue";
 
 const message = useMessage();
@@ -109,7 +103,7 @@ const table = reactive({
     {
       title: "操作",
       render: (row) =>
-        h("div", { class: "operate" }, [
+        h(NSpace, [
           h(
             NButton,
             {
@@ -161,14 +155,11 @@ onMounted(getData);
 <style lang="scss">
 .cloud {
   padding: 10px;
+
   .pagination {
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
-  }
-  .operate {
-    display: flex;
-    gap: 10px;
   }
 }
 </style>
