@@ -23,6 +23,7 @@
       />
     </div>
   </div>
+  <MatchByUpload ref="matchByUpload" :row="rowData" />
 </template>
 
 <script setup>
@@ -31,8 +32,19 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils";
 import { NAvatar, NButton, NImage, NSpace } from "naive-ui";
 import { h, onMounted, reactive, ref } from "vue";
+import MatchByUpload from "@/components/match/upload.vue";
 
 const userStore = useUserStore();
+
+// 弹窗数据
+const rowData = ref({});
+const matchByUpload = ref(null);
+
+// 上传并匹配歌曲信息
+function upload(row) {
+  rowData.value = row;
+  matchByUpload.value.openModal();
+}
 
 // 来源
 function getEnumT(key) {
@@ -140,7 +152,7 @@ const table = reactive({
                 disabled: !isBlocked(row.privileges),
                 size: "small",
                 type: "warning",
-                onClick: () => {}
+                onClick: () => upload(row)
               },
               { default: () => "上传并匹配" }
             )

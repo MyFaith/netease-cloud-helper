@@ -49,10 +49,13 @@ export function match(uid, sid, asid) {
 export function upload(file) {
   const formData = new FormData();
   formData.append("songFile", file);
-  return http.post("/user/cloud", {
+  return http({
+    method: "post",
+    url: "/cloud",
     data: formData,
     headers: {
       "Content-Type": "multipart/form-data"
-    }
+    },
+    timeout: 999999
   });
 }
