@@ -2,8 +2,14 @@
   <div class="cloud">
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
-      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount" show-size-picker :page-sizes="[10, 20, 30]" :on-update:page="changePage" />
+      <n-pagination
+        v-model:page="pagination.page"
+        v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount"
+        show-size-picker
+        :page-sizes="[10, 20, 30]"
+        :on-update:page="changePage"
+      />
     </div>
   </div>
   <MatchByName ref="matchByName" :row="rowData" />
@@ -103,26 +109,28 @@ const table = reactive({
     {
       title: "操作",
       render: (row) =>
-        h(NSpace, [
-          h(
-            NButton,
-            {
-              size: "small",
-              type: "warning",
-              onClick: () => match(row)
-            },
-            { default: () => "匹配" }
-          ),
-          h(
-            NButton,
-            {
-              size: "small",
-              type: "error",
-              onClick: () => remove(row)
-            },
-            { default: () => "删除" }
-          )
-        ])
+        h(NSpace, null, {
+          default: () => [
+            h(
+              NButton,
+              {
+                size: "small",
+                type: "warning",
+                onClick: () => match(row)
+              },
+              { default: () => "匹配" }
+            ),
+            h(
+              NButton,
+              {
+                size: "small",
+                type: "error",
+                onClick: () => remove(row)
+              },
+              { default: () => "删除" }
+            )
+          ]
+        })
     }
   ]
 });
