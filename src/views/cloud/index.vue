@@ -1,6 +1,7 @@
 <template>
   <div class="cloud">
     <n-space justify="end">
+      <n-button type="primary" @click="openUpload">上传</n-button>
       <n-button type="primary" @click="getData">刷新</n-button>
     </n-space>
     <br />
@@ -17,6 +18,7 @@
     </div>
   </div>
   <MatchByName ref="matchByName" :row="rowData" />
+  <UPload ref="uploadModal" :only-upload="true" :row="rowData" />
 </template>
 
 <script setup>
@@ -25,6 +27,7 @@ import { h, onMounted, reactive, ref } from "vue";
 import { getMebibyteStr, formatDate } from "@/utils";
 import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
 import MatchByName from "@/components/match/name.vue";
+import UPload from "@/components/match/upload.vue";
 
 const message = useMessage();
 const dialog = useDialog();
@@ -32,6 +35,13 @@ const dialog = useDialog();
 // 弹窗数据
 const rowData = ref({});
 const matchByName = ref(null);
+const uploadModal = ref(null);
+
+// 匹配歌曲信息
+function openUpload(row) {
+  rowData.value = row;
+  uploadModal.value.openModal();
+}
 
 // 匹配歌曲信息
 function match(row) {

@@ -1,22 +1,22 @@
 <template>
-  <n-modal v-model:show="showModal" :on-after-leave="afterClose" preset="dialog" title="上传并匹配歌曲信息" class="modal">
+  <n-modal v-model:show="showModal" :on-after-leave="afterClose" preset="dialog" :title="props.onlyUpload ? '上传' : '上传并匹配歌曲信息'" class="modal">
     <n-form label-placement="left" label-width="100px" class="form">
-      <n-form-item label="歌曲ID:">
+      <n-form-item v-if="!props.onlyUpload" label="歌曲ID:">
         <span>{{ props.row.id }}</span>
       </n-form-item>
       <n-form-item label="云盘文件ID:">
         <span>{{ form.sid || "未上传" }}</span>
       </n-form-item>
-      <n-form-item label="歌曲名称:">
+      <n-form-item v-if="!props.onlyUpload" label="歌曲名称:">
         <span>{{ props.row.name }}</span>
       </n-form-item>
-      <n-form-item label="歌手:">
+      <n-form-item v-if="!props.onlyUpload" label="歌手:">
         <span>{{ getArtistName(props.row) }}</span>
       </n-form-item>
-      <n-form-item label="专辑:">
+      <n-form-item v-if="!props.onlyUpload" label="专辑:">
         <span>{{ props.row.al?.name }}</span>
       </n-form-item>
-      <n-upload v-if="!form.sid" :custom-request="handleUpload" :on-change="handleUploadStatus" directory-dnd :max="1" accept="audio/*" :show-file-list="false">
+      <n-upload v-if="!form.sid" :custom-request="handleUpload" directory-dnd :max="1" accept="audio/*" :show-file-list="false">
         <n-upload-dragger>
           <div style="margin-bottom: 12px">
             <n-icon size="48" :depth="3">
@@ -28,7 +28,8 @@
       </n-upload>
       <br />
       <n-form-item label="">
-        <n-button block type="primary" @click="handleMatch" :loading="btnLoading">确认</n-button>
+        <n-button v-if="!props.onlyUpload" block type="primary" @click="handleMatch" :loading="btnLoading">确认</n-button>
+        <n-button v-else block type="error" @click="showModal = false" :loading="btnLoading">关闭</n-button>
       </n-form-item>
     </n-form>
   </n-modal>
@@ -41,7 +42,7 @@ import * as cloudApi from "@/api/cloud";
 import { useMessage } from "naive-ui";
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 
-const props = defineProps(["row"]);
+const props = defineProps(["row", "onlyUpload"]);
 const emits = defineEmits(["close"]);
 defineExpose({ openModal });
 
