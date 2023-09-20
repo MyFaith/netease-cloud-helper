@@ -24,6 +24,7 @@
         show-size-picker
         :page-sizes="[10, 50, 100, 500, 1000, 3000, 5000, 10000]"
         :on-update:page="changePage"
+        :on-update:page-size="changePageSize"
       />
     </div>
   </div>
@@ -197,6 +198,12 @@ const pagination = reactive({
 // 翻页
 function changePage(page) {
   pagination.page = page;
+  getSongs();
+}
+
+// 修改分页大小
+function changePageSize(pageSize) {
+  pagination.pageSize = pageSize;
   getSongs();
 }
 
