@@ -10,7 +10,11 @@
       value-field="id"
       :render-label="renderLabel"
     />
-    <n-divider />
+    <br />
+    <n-space justify="end">
+      <n-button type="primary" @click="getSongs">刷新</n-button>
+    </n-space>
+    <br />
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
       <n-pagination
@@ -18,7 +22,7 @@
         v-model:page-size="pagination.pageSize"
         :item-count="pagination.itemCount"
         show-size-picker
-        :page-sizes="[10, 20, 30]"
+        :page-sizes="[10, 50, 100, 500, 1000, 3000, 5000, 10000]"
         :on-update:page="changePage"
       />
     </div>
@@ -143,6 +147,22 @@ const table = reactive({
     },
     {
       title: "操作",
+      filterMultiple: false,
+      defaultFilterOptionValues: [1],
+      filterOptions: [
+        {
+          label: "全部",
+          value: 1
+        },
+        {
+          label: "无版权歌曲",
+          value: -1
+        }
+      ],
+      filter(value, row) {
+        const blocked = isBlocked(row.privileges);
+        return value === -1 ? blocked : true;
+      },
       render: (row) =>
         h(NSpace, null, {
           default: () => [
@@ -170,7 +190,7 @@ function getArtistName(row) {
 // 分页配置
 const pagination = reactive({
   page: 1,
-  pageSize: 30,
+  pageSize: 10,
   itemCount: 0
 });
 
@@ -182,9 +202,11 @@ function changePage(page) {
 
 // 获取歌曲列表
 async function getSongs(id) {
-  playlist.id = id;
+  typeof id === "number" ? (playlist.id = id) : (id = playlist.id);
+  if (!id) return;
+
   table.loading = true;
-  const result = await playlistApi.getSongList(id, pagination.page, pagination.size);
+  const result = await playlistApi.getSongList(id, pagination.page, pagination.pageSize);
   // 合并歌曲信息和播放权限信息
   result.songs.map((item) => {
     const privileges = result.privileges.find((e) => e.id === item.id);

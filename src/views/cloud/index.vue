@@ -1,5 +1,9 @@
 <template>
   <div class="cloud">
+    <n-space justify="end">
+      <n-button type="primary" @click="getData">刷新</n-button>
+    </n-space>
+    <br />
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
       <n-pagination
@@ -7,7 +11,7 @@
         v-model:page-size="pagination.pageSize"
         :item-count="pagination.itemCount"
         show-size-picker
-        :page-sizes="[10, 20, 30]"
+        :page-sizes="[10, 50, 100, 500, 1000, 3000, 5000, 10000]"
         :on-update:page="changePage"
       />
     </div>
@@ -138,7 +142,7 @@ const table = reactive({
 // 分页配置
 const pagination = reactive({
   page: 1,
-  pageSize: 30,
+  pageSize: 10,
   itemCount: 0
 });
 
@@ -151,7 +155,7 @@ function changePage(page) {
 // 获取数据
 async function getData() {
   table.loading = true;
-  const result = await cloudApi.getList(pagination.page, pagination.limit);
+  const result = await cloudApi.getList(pagination.page, pagination.pageSize);
   pagination.itemCount = result.count;
   table.dataList = result.data;
   table.loading = false;
