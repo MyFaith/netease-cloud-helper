@@ -1,5 +1,6 @@
 <template>
-  <div class="cloud">
+  <h3 v-if="!userStore.cookie">请登录</h3>
+  <div v-else class="cloud">
     <n-space justify="end">
       <n-button type="primary" @click="openUpload">上传</n-button>
       <n-button type="primary" @click="getData">刷新</n-button>
@@ -29,9 +30,11 @@ import { getMebibyteStr, formatDate } from "@/utils";
 import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
 import MatchByName from "@/components/match/name.vue";
 import UPload from "@/components/match/upload.vue";
+import { useUserStore } from "@/stores/user";
 
 const message = useMessage();
 const dialog = useDialog();
+const userStore = useUserStore();
 
 // 弹窗数据
 const rowData = ref({});

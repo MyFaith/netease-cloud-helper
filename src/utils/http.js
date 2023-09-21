@@ -2,8 +2,7 @@ import axios from "axios";
 import { useUserStore } from "@/stores/user";
 
 const http = axios.create({
-  // baseURL: "https://163musicapi.coolxy.cn",
-  baseURL: "http://myfaith.cc:4002",
+  baseURL: process.env.API || "https://163musicapi.coolxy.cn",
   params: {}
 });
 

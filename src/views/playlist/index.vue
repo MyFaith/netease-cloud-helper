@@ -1,5 +1,6 @@
 <template>
-  <div class="playlist">
+  <h3 v-if="!userStore.cookie">请登录</h3>
+  <div v-else class="playlist">
     <n-select
       v-model:value="playlist.id"
       :on-update:value="getSongs"
