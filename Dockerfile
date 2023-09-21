@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm i && \
-  npm build
+  npm run build
 
 FROM nginx as nginx
 
