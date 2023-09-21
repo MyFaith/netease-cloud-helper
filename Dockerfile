@@ -3,8 +3,8 @@ FROM node as node
 WORKDIR /app
 COPY . .
 
-RUN pnpm i && \
-  pnpm build
+RUN npm i && \
+  npm build
 
 FROM nginx as nginx
 
