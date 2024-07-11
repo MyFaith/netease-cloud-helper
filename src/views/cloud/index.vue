@@ -6,6 +6,17 @@
       <n-button type="primary" @click="getData">刷新</n-button>
     </n-space>
     <br />
+    <div class="pagination">
+      <n-pagination
+        v-model:page="pagination.page"
+        v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount"
+        show-size-picker
+        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+        :on-update:page="changePage"
+        :on-update:page-size="changePageSize"
+      />
+    </div>
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
       <n-pagination
@@ -13,7 +24,7 @@
         v-model:page-size="pagination.pageSize"
         :item-count="pagination.itemCount"
         show-size-picker
-        :page-sizes="[10, 50, 100, 500, 1000, 3000, 5000, 10000]"
+        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
         :on-update:page="changePage"
         :on-update:page-size="changePageSize"
       />
@@ -85,7 +96,7 @@ const table = reactive({
   dataList: [],
   columns: [
     {
-      title: "ID",
+      title: "云盘ID",
       key: "songId",
       width: 120
     },
@@ -156,7 +167,7 @@ const table = reactive({
 // 分页配置
 const pagination = reactive({
   page: 1,
-  pageSize: 10,
+  pageSize: 100,
   itemCount: 0
 });
 
@@ -191,7 +202,7 @@ onMounted(getData);
   .pagination {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin: 10px 0;
   }
 }
 </style>

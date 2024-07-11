@@ -5,6 +5,7 @@
       v-model:value="playlist.id"
       :on-update:value="getSongs"
       :loading="playlist.loading"
+      :disabled="playlist.loading"
       size="large"
       :options="playlist.options"
       label-field="name"
@@ -16,6 +17,17 @@
       <n-button type="primary" @click="getSongs">刷新</n-button>
     </n-space>
     <br />
+    <div class="pagination">
+      <n-pagination
+        v-model:page="pagination.page"
+        v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount"
+        show-size-picker
+        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+        :on-update:page="changePage"
+        :on-update:page-size="changePageSize"
+      />
+    </div>
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
       <n-pagination
@@ -23,7 +35,7 @@
         v-model:page-size="pagination.pageSize"
         :item-count="pagination.itemCount"
         show-size-picker
-        :page-sizes="[10, 50, 100, 500, 1000, 3000, 5000, 10000]"
+        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
         :on-update:page="changePage"
         :on-update:page-size="changePageSize"
       />
@@ -106,7 +118,7 @@ const table = reactive({
       render: (row) => h(NImage, { src: row.al.picUrl, width: 100 })
     },
     {
-      title: "ID",
+      title: "歌曲ID",
       key: "id",
       width: 120
     },
@@ -124,6 +136,21 @@ const table = reactive({
       key: "al.name"
     },
     {
+      title: "版权",
+      key: "isBlocked",
+      width: 100,
+      render: (row) =>
+        !isBlocked(row.privileges)
+          ? "正常"
+          : h(
+              "font",
+              { color: "red" },
+              {
+                default: () => "无版权"
+              }
+            )
+    },
+    /* {
       title: "来源",
       key: "t",
       width: 120,
@@ -140,7 +167,7 @@ const table = reactive({
       key: "originCoverType",
       width: 100,
       render: (row) => getEnumOriginCoverType(row.originCoverType)
-    },
+    }, */
     {
       title: "发布时间",
       key: "addTime",
@@ -192,7 +219,7 @@ function getArtistName(row) {
 // 分页配置
 const pagination = reactive({
   page: 1,
-  pageSize: 10,
+  pageSize: 100,
   itemCount: 0
 });
 
@@ -262,7 +289,7 @@ onMounted(getData);
   .pagination {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin: 10px 0;
   }
 }
 </style>
