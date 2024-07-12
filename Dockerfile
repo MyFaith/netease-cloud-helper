@@ -3,7 +3,7 @@ FROM node as node
 WORKDIR /app
 COPY . .
 
-ENV VITE_API_URL=https://163musicapi.coolxy.cn
+ENV VITE_API_URL=http://myfaith.cc:4004
 
 RUN npm i && \
 npm run build
