@@ -6,6 +6,8 @@ const http = axios.create({
   params: {}
 });
 
+console.log("VITE_API_URL", process.env.VITE_API_URL);
+
 http.interceptors.request.use((config) => {
   const userStore = useUserStore();
   config.params["time"] = Date.now();
