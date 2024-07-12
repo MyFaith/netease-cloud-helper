@@ -139,7 +139,7 @@ const table = reactive({
 
 // 选中搜索结果
 function setId(rowKeys) {
-  form.asid = rowKeys[0];
+  form.asid = `${rowKeys[0]}`;
 }
 
 // 获取歌手名称

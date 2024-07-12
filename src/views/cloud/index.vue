@@ -40,7 +40,7 @@ import { h, onMounted, reactive, ref } from "vue";
 import { getMebibyteStr, formatDate } from "@/utils";
 import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
 import MatchCloud from "@/components/match/cloud.vue";
-import Upload from "@/components/match/upload.vue";
+import Upload from "@/components/upload.vue";
 import { useUserStore } from "@/stores/user";
 
 const message = useMessage();
