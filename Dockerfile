@@ -1,5 +1,7 @@
 FROM node as node
 
+ENV BASE_URL=https://163musicapi.coolxy.cn
+
 WORKDIR /app
 COPY . .
 
