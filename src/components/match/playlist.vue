@@ -5,6 +5,20 @@
       <n-form-item label="云盘文件ID:">
         <n-input v-model:value="form.sid" type="text" placeholder="直接输入云盘ID" clearable></n-input>
       </n-form-item>
+      <n-form-item label="选择歌曲:">
+        <n-select
+          v-model:value="form.sid"
+          filterable
+          placeholder="搜索歌曲或输入歌曲ID"
+          :options="selectOptions.data"
+          :loading="selectOptions.loading"
+          clearable
+          label-field="fileName"
+          value-field="songId"
+          :clear-filter-after-select="false"
+          @scroll="getCloudList(true, $event)"
+        />
+      </n-form-item>
       <n-form-item label=" ">
         <n-button type="primary" @click="handleMatch" :loading="btnLoading">确认</n-button>
       </n-form-item>
@@ -35,6 +49,31 @@ const form = reactive({
 
 const btnLoading = ref(false);
 
+// 选择歌曲配置
+const selectOptions = reactive({
+  page: 1,
+  data: [],
+  loading: false
+});
+
+// 获取云盘文件列表
+async function getCloudList(scrolling = false, e) {
+  // 滚动触发判断
+  if (scrolling) {
+    const currentTarget = e.currentTarget;
+    // 判断是否到底部
+    if (currentTarget.scrollTop + currentTarget.offsetHeight >= currentTarget.scrollHeight) {
+      selectOptions.page++;
+    } else {
+      return;
+    }
+  }
+  selectOptions.loading = true;
+  const { data } = await cloudApi.getList(selectOptions.page);
+  selectOptions.data.push(...data);
+  selectOptions.loading = false;
+}
+
 // 匹配歌曲
 async function handleMatch() {
   btnLoading.value = true;
@@ -52,6 +91,7 @@ async function handleMatch() {
 // 打开弹窗
 function openModal() {
   showModal.value = true;
+  getCloudList();
 }
 
 // 关闭弹窗
