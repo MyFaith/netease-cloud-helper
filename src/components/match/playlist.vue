@@ -11,6 +11,7 @@
           filterable
           placeholder="搜索歌曲或输入歌曲ID"
           :options="selectOptions.data"
+          :disabled="selectOptions.loading"
           :loading="selectOptions.loading"
           clearable
           label-field="fileName"
