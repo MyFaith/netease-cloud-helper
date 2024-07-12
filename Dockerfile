@@ -1,7 +1,5 @@
 FROM node as node
 
-ENV VITE_API_URL=https://163musicapi.coolxy.cn
-
 WORKDIR /app
 COPY . .
 
