@@ -16,8 +16,8 @@
           label-field="fileName"
           value-field="songId"
           :clear-filter-after-select="false"
-          @scroll="getCloudList(true, $event)"
         />
+        <!-- @scroll="getCloudList(true, $event)" -->
       </n-form-item>
       <n-form-item label=" ">
         <n-button type="primary" @click="handleMatch" :loading="btnLoading">确认</n-button>
@@ -58,7 +58,7 @@ const selectOptions = reactive({
 
 // 获取云盘文件列表
 async function getCloudList(scrolling = false, e) {
-  // 滚动触发判断
+  /* // 滚动触发判断
   if (scrolling) {
     const currentTarget = e.currentTarget;
     // 判断是否到底部
@@ -67,9 +67,9 @@ async function getCloudList(scrolling = false, e) {
     } else {
       return;
     }
-  }
+  } */
   selectOptions.loading = true;
-  const { data } = await cloudApi.getList(selectOptions.page);
+  const { data } = await cloudApi.getList(selectOptions.page, 100);
   selectOptions.data.push(...data);
   selectOptions.loading = false;
 }
