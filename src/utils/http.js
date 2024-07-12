@@ -6,7 +6,7 @@ const http = axios.create({
   params: {}
 });
 
-console.log("VITE_API_URL", process.env.VITE_API_URL);
+console.log("VITE_API_URL", process.env);
 
 http.interceptors.request.use((config) => {
   const userStore = useUserStore();
