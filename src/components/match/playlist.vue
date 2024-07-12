@@ -100,6 +100,8 @@ function afterClose() {
   form.asid = "";
   form.sid = "";
   form.uid = "";
+  selectOptions.page = 1;
+  selectOptions.data = [];
 }
 </script>
 
