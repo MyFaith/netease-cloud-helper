@@ -1,48 +1,59 @@
 <template>
-  <div class="menu-list">
-    <RouterLink v-for="(item, i) in menuList" :key="i" class="menu-item" :to="item.to">{{ item.text }}</RouterLink>
-  </div>
+  <n-menu :options="menuOptions" default-value="home" />
 </template>
 
 <script setup>
+import { h } from "vue";
 import { RouterLink } from "vue-router";
+import { NIcon } from "naive-ui";
+import { Home as HomeIcon, Playlist as PlaylistIcon, Cloud as CloudIcon } from "@vicons/carbon";
 
-const menuList = [
+function renderIcon(icon) {
+  return () => h(NIcon, null, { default: () => h(icon) });
+}
+
+const menuOptions = [
   {
-    text: "首页",
-    to: "/"
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: "home"
+          }
+        },
+        { default: () => "首页" }
+      ),
+    key: "home",
+    icon: renderIcon(HomeIcon)
   },
   {
-    text: "歌单",
-    to: "/playlist"
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: "playlist"
+          }
+        },
+        { default: () => "歌单" }
+      ),
+    key: "playlist",
+    icon: renderIcon(PlaylistIcon)
   },
   {
-    text: "云盘",
-    to: "/cloud"
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: "cloud"
+          }
+        },
+        { default: () => "云盘" }
+      ),
+    key: "cloud",
+    icon: renderIcon(CloudIcon)
   }
 ];
 </script>
-
-<style lang="scss">
-.menu-list {
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--color-border);
-  height: 100vh;
-  overflow: hidden;
-  .menu-item {
-    padding: 10px 0;
-    color: var(--color-text);
-    font-size: 18px;
-    text-align: center;
-    text-decoration: none;
-    &.router-link-active {
-      color: var(--color-primary);
-      font-weight: bold;
-    }
-    &:hover {
-      background: var(--color-background-light);
-    }
-  }
-}
-</style>
