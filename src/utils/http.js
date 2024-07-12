@@ -2,11 +2,11 @@ import axios from "axios";
 import { useUserStore } from "@/stores/user";
 
 const http = axios.create({
-  baseURL: process.env.VITE_API_URL || "https://163musicapi.coolxy.cn",
+  baseURL: import.meta.env.VITE_API_URL || "https://163musicapi.coolxy.cn",
   params: {}
 });
 
-console.log("VITE_API_URL", process.env);
+console.log("VITE_API_URL", import.meta.env);
 
 http.interceptors.request.use((config) => {
   const userStore = useUserStore();
