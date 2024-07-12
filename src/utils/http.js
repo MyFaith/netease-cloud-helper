@@ -6,6 +6,8 @@ const http = axios.create({
   params: {}
 });
 
+console.log("env:", import.meta.env);
+
 http.interceptors.request.use((config) => {
   const userStore = useUserStore();
   config.params["time"] = Date.now();
