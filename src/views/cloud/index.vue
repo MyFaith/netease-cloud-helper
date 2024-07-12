@@ -2,7 +2,7 @@
   <h3 v-if="!userStore.cookie">请登录</h3>
   <div v-else class="cloud">
     <n-space justify="end">
-      <n-button type="primary" @click="openUpload">上传</n-button>
+      <!-- <n-button type="primary" @click="openUpload">上传</n-button> -->
       <n-button type="primary" @click="getData">刷新</n-button>
     </n-space>
     <br />
@@ -30,8 +30,8 @@
       />
     </div>
   </div>
-  <MatchByName ref="matchByName" :row="rowData" />
-  <UPload ref="uploadModal" :only-upload="true" :row="rowData" />
+  <MatchCloud ref="matchCloud" :row="rowData" />
+  <Upload ref="uploadModal" :only-upload="true" :row="rowData" />
 </template>
 
 <script setup>
@@ -39,8 +39,8 @@ import * as cloudApi from "@/api/cloud";
 import { h, onMounted, reactive, ref } from "vue";
 import { getMebibyteStr, formatDate } from "@/utils";
 import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
-import MatchByName from "@/components/match/name.vue";
-import UPload from "@/components/match/upload.vue";
+import MatchCloud from "@/components/match/cloud.vue";
+import Upload from "@/components/match/upload.vue";
 import { useUserStore } from "@/stores/user";
 
 const message = useMessage();
@@ -49,7 +49,7 @@ const userStore = useUserStore();
 
 // 弹窗数据
 const rowData = ref({});
-const matchByName = ref(null);
+const matchCloud = ref(null);
 const uploadModal = ref(null);
 
 // 匹配歌曲信息
@@ -61,7 +61,7 @@ function openUpload(row) {
 // 匹配歌曲信息
 function match(row) {
   rowData.value = row;
-  matchByName.value.openModal();
+  matchCloud.value.openModal();
 }
 
 // 删除
@@ -147,7 +147,7 @@ const table = reactive({
                 type: "warning",
                 onClick: () => match(row)
               },
-              { default: () => "匹配" }
+              { default: () => "匹配歌曲信息" }
             ),
             h(
               NButton,

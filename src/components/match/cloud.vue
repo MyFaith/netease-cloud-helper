@@ -12,7 +12,7 @@
         <span>{{ formatDate(props.row.addTime) }}</span>
       </n-form-item>
       <n-form-item label="输入歌曲ID:">
-        <n-input v-model:value="form.asid" type="text" placeholder="搜索歌曲名称或直接输入ID"></n-input>
+        <n-input v-model:value="form.asid" type="text" placeholder="直接输入歌曲ID"></n-input>
       </n-form-item>
       <n-form-item label="搜索歌曲:">
         <n-input-group>

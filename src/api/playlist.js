@@ -16,7 +16,7 @@ export function getList(uid, page = 1, limit = 30) {
 }
 
 /**
- * 获取歌单内所以歌曲
+ * 获取歌单内歌曲
  * @param {*} page 当前页数
  * @param {*} limit 分页大小
  */

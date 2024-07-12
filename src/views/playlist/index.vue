@@ -41,7 +41,7 @@
       />
     </div>
   </div>
-  <MatchByUpload ref="matchByUpload" :row="rowData" />
+  <MatchPlaylist ref="matchPlaylist" :row="rowData" />
 </template>
 
 <script setup>
@@ -50,18 +50,18 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils";
 import { NAvatar, NButton, NImage, NSpace } from "naive-ui";
 import { h, onMounted, reactive, ref } from "vue";
-import MatchByUpload from "@/components/match/upload.vue";
+import MatchPlaylist from "@/components/match/playlist.vue";
 
 const userStore = useUserStore();
 
 // 弹窗数据
 const rowData = ref({});
-const matchByUpload = ref(null);
+const matchPlaylist = ref(null);
 
-// 上传并匹配歌曲信息
-function upload(row) {
+// 匹配歌曲信息
+function match(row) {
   rowData.value = row;
-  matchByUpload.value.openModal();
+  matchPlaylist.value.openModal();
 }
 
 // 来源
@@ -201,9 +201,9 @@ const table = reactive({
                 disabled: !isBlocked(row.privileges),
                 size: "small",
                 type: "warning",
-                onClick: () => upload(row)
+                onClick: () => match(row)
               },
-              { default: () => "上传并匹配" }
+              { default: () => "匹配云盘文件" }
             )
           ]
         })
@@ -237,11 +237,12 @@ function changePageSize(pageSize) {
 
 // 获取歌曲列表
 async function getSongs(id) {
+  // 如果传id了，则用传入的id获取，如果没传，则用select组件的value获取
   typeof id === "number" ? (playlist.id = id) : (id = playlist.id);
   if (!id) return;
 
   table.loading = true;
-  const result = await playlistApi.getSongList(id, pagination.page, pagination.pageSize);
+  const result = await playlistApi.getSongList(id, pagination.page || 1, pagination.pageSize);
   // 合并歌曲信息和播放权限信息
   result.songs.map((item) => {
     const privileges = result.privileges.find((e) => e.id === item.id);
