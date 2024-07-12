@@ -1,5 +1,7 @@
 FROM node as node
 
+ENV API=https://163musicapi.coolxy.cn
+
 WORKDIR /app
 COPY . .
 
