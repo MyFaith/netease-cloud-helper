@@ -14,7 +14,7 @@ COPY --from=node /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/
 
-RUN apk add node npm npx
+RUN apt update && apt install nodejs npm npx
 
 EXPOSE 80
 
