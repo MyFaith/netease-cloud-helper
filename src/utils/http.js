@@ -3,10 +3,9 @@ import { useUserStore } from "@/stores/user";
 
 const http = axios.create({
   baseURL: "/api",
-  params: {}
+  params: {},
+  withCredentials: true
 });
-
-console.log("env:", import.meta.env);
 
 http.interceptors.request.use((config) => {
   const userStore = useUserStore();
