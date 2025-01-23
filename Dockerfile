@@ -3,8 +3,9 @@ FROM node
 WORKDIR /app
 COPY . .
 
-RUN npm i
+RUN npm i && \
+  npx NeteaseCloudMusicApi@latest &
 
 EXPOSE 80
 
-RUN npx NeteaseCloudMusicApi@latest && npm run dev
+RUN npm run dev
