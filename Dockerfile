@@ -1,16 +1,13 @@
-FROM node as node
-
+FROM node:16.13.1-alpine as build
+ENV VITE_API_URL=http://localhost:3000
 WORKDIR /app
 COPY . .
-
-ENV VITE_API_URL=http://localhost:3000
 
 RUN npm i ; \
   npm run build
 
-FROM nginx as nginx
-
-COPY --from=node /app/dist /usr/share/nginx/html
+FROM nginx:1.20.2-alpine as app
+COPY --from=build /app/dist /usr/share/nginx/html
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories &&\
   apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.14/main libuv \
