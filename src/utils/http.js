@@ -2,7 +2,7 @@ import axios from "axios";
 import { useUserStore } from "@/stores/user";
 
 const http = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: "/api",
   params: {}
 });
 
