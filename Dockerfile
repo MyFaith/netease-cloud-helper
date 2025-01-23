@@ -15,4 +15,4 @@ RUN npm install -g NeteaseCloudMusicApi
 
 EXPOSE 80 3000
 
-CMD nginx ; npx NeteaseCloudMusicApi
+CMD nginx ; exec npx NeteaseCloudMusicApi
