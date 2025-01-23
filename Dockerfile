@@ -3,7 +3,7 @@ FROM node as node
 WORKDIR /app
 COPY . .
 
-ENV VITE_API_URL=http://myfaith.cc:4004
+ENV VITE_API_URL=http://localhost:3000
 
 RUN npm i && \
 npm run build
@@ -14,4 +14,8 @@ COPY --from=node /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/
 
+RUN apk add node npm npx
+
 EXPOSE 80
+
+RUN npx NeteaseCloudMusicApi@latest
