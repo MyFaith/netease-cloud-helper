@@ -14,6 +14,6 @@ COPY --from=node /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/
 
-EXPOSE 80
+EXPOSE 80 3000
 
-CMD nginx ; npx NeteaseCloudMusicApi@latest
+CMD nginx ; exec npx NeteaseCloudMusicApi@latest
