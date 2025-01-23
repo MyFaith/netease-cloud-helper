@@ -1,11 +1,19 @@
-FROM node
+FROM node as node
 
 WORKDIR /app
 COPY . .
 
-RUN npm i && \
-  npx NeteaseCloudMusicApi@latest &
+ENV VITE_API_URL=http://myfaith.cc:4004
+
+RUN npm i ; \
+  npm run build
+
+FROM nginx as nginx
+
+COPY --from=node /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/
 
 EXPOSE 80
 
-RUN npm run dev
+CMD nginx ; npx NeteaseCloudMusicApi@latest
