@@ -2,7 +2,7 @@ import axios from "axios";
 import { useUserStore } from "@/stores/user";
 
 const http = axios.create({
-  baseURL: "/api",
+  baseURL: "/api/netease",
   params: {},
   withCredentials: true
 });
