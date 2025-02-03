@@ -39,3 +39,14 @@ export function getKeyStatus(key) {
 export function getInfo() {
   return http.get("/user/account");
 }
+
+/**
+ * 获取最近播放
+ */
+export function getRecentPlays() {
+  return http.get("/record/recent/song", {
+    params: {
+      limit: 5
+    }
+  });
+}
