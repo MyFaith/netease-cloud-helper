@@ -45,8 +45,9 @@ export function match(uid, sid, asid) {
 /**
  * 云盘上传
  * @param {*} file 文件
+ * @param {*} onProgress 进度回调
  */
-export function upload(file) {
+export function upload(file, onProgress) {
   const formData = new FormData();
   formData.append("songFile", file);
   return http({
@@ -56,6 +57,6 @@ export function upload(file) {
     headers: {
       "Content-Type": "multipart/form-data"
     },
-    timeout: 999999
+    onUploadProgress: onProgress
   });
 }

@@ -31,7 +31,7 @@
     </div>
   </div>
   <MatchCloud ref="matchCloud" :row="rowData" />
-  <Upload ref="uploadModal" :only-upload="true" :row="rowData" />
+  <Upload ref="uploadModal" :only-upload="true" @close="getData" />
 </template>
 
 <script setup>
@@ -53,8 +53,7 @@ const matchCloud = ref(null);
 const uploadModal = ref(null);
 
 // 匹配歌曲信息
-function openUpload(row) {
-  rowData.value = row;
+function openUpload() {
   uploadModal.value.openModal();
 }
 
