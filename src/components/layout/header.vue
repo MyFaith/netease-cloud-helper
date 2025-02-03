@@ -22,6 +22,10 @@ const userStore = useUserStore();
 const dialog = useDialog();
 const message = useMessage();
 
+// 打开页面默认关闭登录弹窗
+userStore.showLogin = false;
+
+
 // 登录
 function login() {
   userStore.showLogin = true;
@@ -52,17 +56,21 @@ function logout() {
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid var(--color-border);
+
   .title {
     font-size: 22px;
     font-weight: bold;
   }
+
   .user {
     display: flex;
     align-items: center;
     gap: 10px;
+
     .login {
       color: var(--color-primary);
     }
+
     .logout {
       color: var(--color-danger);
     }

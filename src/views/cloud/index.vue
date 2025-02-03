@@ -1,5 +1,9 @@
 <template>
-  <h3 v-if="!userStore.cookie">请登录</h3>
+  <div class="cloud" v-if="!userStore.cookie">
+    <n-alert type="info" title="提示">
+      请先登录以查看您的云盘文件
+    </n-alert>
+  </div>
   <div v-else class="cloud">
     <n-space justify="end">
       <!-- <n-button type="primary" @click="openUpload">上传</n-button> -->
@@ -7,27 +11,15 @@
     </n-space>
     <br />
     <div class="pagination">
-      <n-pagination
-        v-model:page="pagination.page"
-        v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount"
-        show-size-picker
-        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-        :on-update:page="changePage"
-        :on-update:page-size="changePageSize"
-      />
+      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+        :on-update:page="changePage" :on-update:page-size="changePageSize" />
     </div>
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
     <div class="pagination">
-      <n-pagination
-        v-model:page="pagination.page"
-        v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount"
-        show-size-picker
-        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-        :on-update:page="changePage"
-        :on-update:page-size="changePageSize"
-      />
+      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+        :on-update:page="changePage" :on-update:page-size="changePageSize" />
     </div>
   </div>
   <MatchCloud ref="matchCloud" :row="rowData" />
@@ -196,7 +188,7 @@ onMounted(getData);
 
 <style lang="scss">
 .cloud {
-  padding: 10px;
+  padding: 20px;
 
   .pagination {
     display: flex;
