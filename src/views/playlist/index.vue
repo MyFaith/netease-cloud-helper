@@ -4,26 +4,50 @@
       请先登录以查看您的歌单
     </n-alert>
   </div>
-  <div v-else class="playlist">
-    <n-select v-model:value="playlist.id" :on-update:value="getSongs" :loading="playlist.loading"
-      :disabled="playlist.loading" size="large" :options="playlist.options" label-field="name" value-field="id"
-      :render-label="renderLabel" />
-    <br />
-    <n-space justify="end">
-      <n-button type="primary" @click="getSongs">刷新</n-button>
-    </n-space>
-    <br />
-    <div class="pagination">
-      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-        :on-update:page="changePage" :on-update:page-size="changePageSize" />
-    </div>
-    <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
-    <div class="pagination">
-      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-        :on-update:page="changePage" :on-update:page-size="changePageSize" />
-    </div>
+  <div v-else class="playlist-container">
+    <n-grid cols="24" x-gap="12">
+      <n-gi :span="4">
+        <div class="playlist-list">
+          <n-scrollbar style="max-height: calc(100vh - 160px)">
+            <n-menu v-model:value="playlist.id" :options="playlistMenuOptions" :render-label="renderMenuLabel"
+              @update:value="getSongs" />
+          </n-scrollbar>
+        </div>
+      </n-gi>
+
+      <n-gi :span="20">
+        <div class="content-box">
+          <div class="pagination-header">
+            <n-pagination
+              v-model:page="pagination.page"
+              v-model:page-size="pagination.pageSize"
+              :item-count="pagination.itemCount"
+              show-size-picker
+              :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+              :on-update:page="changePage"
+              :on-update:page-size="changePageSize"
+            />
+            <n-button
+              type="primary"
+              @click="getSongs"
+              circle
+              size="small"
+              class="refresh-btn"
+            >
+              <template #icon>
+                <n-icon :component="RefreshIcon" />
+              </template>
+            </n-button>
+          </div>
+          <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
+          <div class="pagination">
+            <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
+              :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+              :on-update:page="changePage" :on-update:page-size="changePageSize" />
+          </div>
+        </div>
+      </n-gi>
+    </n-grid>
   </div>
   <MatchPlaylist ref="matchPlaylist" :row="rowData" />
 </template>
@@ -32,9 +56,10 @@
 import * as playlistApi from "@/api/playlist";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils";
-import { NAvatar, NButton, NImage, NSpace } from "naive-ui";
-import { h, onMounted, reactive, ref } from "vue";
+import { NAvatar, NButton, NImage, NSpace, NMenu, NScrollbar, NGrid, NGi } from "naive-ui";
+import { h, onMounted, reactive, ref, computed } from "vue";
 import MatchPlaylist from "@/components/match/playlist.vue";
+import { RefreshOutline as RefreshIcon } from '@vicons/ionicons5';
 
 const userStore = useUserStore();
 
@@ -239,12 +264,34 @@ async function getSongs(id) {
 }
 
 // 歌单列表渲染
-const renderLabel = (option) => {
+const playlistMenuOptions = computed(() => {
+  return playlist.options.map(item => ({
+    label: item.name,
+    key: item.id,
+    cover: item.coverImgUrl
+  }));
+});
+
+const renderMenuLabel = (option) => {
   return h(
     NSpace,
-    { align: "center" },
+    { align: "center", style: { width: '100%' } },
     {
-      default: () => [h(NAvatar, { src: option.coverImgUrl }, { default: () => { } }), h("span", {}, { default: () => option.name })]
+      default: () => [
+        h(NAvatar, {
+          src: option.cover,
+          size: 'small',
+          style: { marginRight: '8px' }
+        }),
+        h('div', { style: { flex: 1 } }, [
+          h('div', {
+            style: {
+              fontSize: '14px',
+              lineHeight: '1.4',
+            }
+          }, option.label)
+        ])
+      ]
     }
   );
 };
@@ -269,13 +316,78 @@ onMounted(getData);
 </script>
 
 <style lang="scss" scoped>
-.playlist {
+.playlist-container {
   padding: 20px;
+  height: 100vh;
+}
 
-  .pagination {
+.playlist-list {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  :deep(.n-menu-item-content) {
+    padding: 10px 12px !important;
+    margin: 4px 0;
+    border-radius: 6px;
+    transition: all 0.3s;
     display: flex;
-    justify-content: flex-end;
-    margin: 10px 0;
+    align-items: center;
+
+    &:hover {
+      background-color: rgba(51, 94, 234, 0.06);
+    }
+
+    .n-avatar {
+      width: 32px;
+      height: 32px;
+      margin: 0 8px 0 2px;
+      flex-shrink: 0;
+    }
+
+    div>div:first-child {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      font-size: 14px;
+    }
+  }
+
+  :deep(.n-menu-item-content--selected) {
+    background-color: rgba(51, 94, 234, 0.08);
+    font-weight: 500;
+  }
+}
+
+.content-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-left: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+
+  .n-data-table {
+    flex: 1;
+    margin-top: 16px;
+  }
+}
+
+.pagination {
+  margin: 16px 0;
+}
+
+.pagination-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .refresh-btn {
+    margin-left: 12px;
   }
 }
 </style>
@@ -283,5 +395,10 @@ onMounted(getData);
 <style lang="scss">
 .n-select .n-avatar {
   margin-top: 6px !important;
+}
+
+.n-space {
+  flex-flow: row nowrap !important;
+  gap: 8px 0px !important;
 }
 </style>
