@@ -6,22 +6,50 @@
   </div>
   <div v-else class="cloud">
     <div class="pagination-header">
-      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-        :on-update:page="changePage" :on-update:page-size="changePageSize" />
-      <n-button
-        type="primary"
-        @click="getData"
-        circle
-        size="small"
-        class="refresh-btn"
-      >
-        <template #icon>
-          <n-icon :component="RefreshIcon" />
-        </template>
-      </n-button>
+      <n-pagination
+        v-model:page="pagination.page"
+        v-model:page-size="pagination.pageSize"
+        :item-count="pagination.itemCount"
+        show-size-picker
+        :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+        :on-update:page="changePage"
+        :on-update:page-size="changePageSize"
+      />
+      <div class="action-buttons">
+        <n-button
+          type="primary"
+          @click="openUpload"
+          circle
+          size="small"
+          class="action-btn"
+          secondary
+        >
+          <template #icon>
+            <n-icon :component="UploadIcon" />
+          </template>
+        </n-button>
+        <n-button
+          type="primary"
+          @click="getData"
+          circle
+          size="small"
+          class="refresh-btn"
+          secondary
+        >
+          <template #icon>
+            <n-icon :component="RefreshIcon" />
+          </template>
+        </n-button>
+      </div>
     </div>
-    <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
+    <n-data-table
+      :columns="table.columns"
+      :data="table.dataList"
+      :loading="table.loading"
+      striped
+      :bordered="false"
+      :single-line="false"
+    />
   </div>
   <MatchCloud ref="matchCloud" :row="rowData" />
   <Upload ref="uploadModal" :only-upload="true" @close="getData" />
@@ -35,7 +63,7 @@ import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
 import MatchCloud from "@/components/match/cloud.vue";
 import Upload from "@/components/upload.vue";
 import { useUserStore } from "@/stores/user";
-import { RefreshOutline as RefreshIcon } from '@vicons/ionicons5';
+import { RefreshOutline as RefreshIcon, CloudUploadOutline as UploadIcon } from '@vicons/ionicons5';
 
 const message = useMessage();
 const dialog = useDialog();
@@ -197,11 +225,20 @@ onMounted(getData);
   .pagination-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-bottom: 16px;
 
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-left: auto;
+    }
+
+    .action-btn {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+
     .refresh-btn {
-      margin-left: 12px;
     }
   }
 }
