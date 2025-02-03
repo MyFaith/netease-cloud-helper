@@ -5,22 +5,23 @@
     </n-alert>
   </div>
   <div v-else class="cloud">
-    <n-space justify="end">
-      <!-- <n-button type="primary" @click="openUpload">上传</n-button> -->
-      <n-button type="primary" @click="getData">刷新</n-button>
-    </n-space>
-    <br />
-    <div class="pagination">
+    <div class="pagination-header">
       <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
         :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
         :on-update:page="changePage" :on-update:page-size="changePageSize" />
+      <n-button
+        type="primary"
+        @click="getData"
+        circle
+        size="small"
+        class="refresh-btn"
+      >
+        <template #icon>
+          <n-icon :component="RefreshIcon" />
+        </template>
+      </n-button>
     </div>
     <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
-    <div class="pagination">
-      <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-        :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-        :on-update:page="changePage" :on-update:page-size="changePageSize" />
-    </div>
   </div>
   <MatchCloud ref="matchCloud" :row="rowData" />
   <Upload ref="uploadModal" :only-upload="true" @close="getData" />
@@ -34,6 +35,7 @@ import { NButton, NSpace, useDialog, useMessage } from "naive-ui";
 import MatchCloud from "@/components/match/cloud.vue";
 import Upload from "@/components/upload.vue";
 import { useUserStore } from "@/stores/user";
+import { RefreshOutline as RefreshIcon } from '@vicons/ionicons5';
 
 const message = useMessage();
 const dialog = useDialog();
@@ -186,14 +188,28 @@ async function getData() {
 onMounted(getData);
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .cloud {
   padding: 20px;
+  height: calc(100vh - 100px);
+  overflow: hidden;
 
-  .pagination {
+  .pagination-header {
     display: flex;
-    justify-content: flex-end;
-    margin: 10px 0;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    .refresh-btn {
+      margin-left: 12px;
+    }
   }
+}
+</style>
+
+<style lang="scss">
+.cloud .n-data-table-wrapper {
+  height: calc(100vh - 130px) !important;
+  overflow-y: auto !important;
 }
 </style>
