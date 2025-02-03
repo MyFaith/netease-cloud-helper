@@ -41,6 +41,18 @@ export function getInfo() {
 }
 
 /**
+ * 获取用户详情
+ * @param {*} userId
+ */
+export function getUserDetail(userId) {
+  return http.get("/user/detail", {
+    params: {
+      uid: userId
+    }
+  });
+}
+
+/**
  * 获取最近播放
  */
 export function getRecentPlays() {
