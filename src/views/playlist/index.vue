@@ -18,33 +18,16 @@
       <n-gi :span="20">
         <div class="content-box">
           <div class="pagination-header">
-            <n-pagination
-              v-model:page="pagination.page"
-              v-model:page-size="pagination.pageSize"
-              :item-count="pagination.itemCount"
-              show-size-picker
-              :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-              :on-update:page="changePage"
-              :on-update:page-size="changePageSize"
-            />
-            <n-button
-              type="primary"
-              @click="getSongs"
-              circle
-              size="small"
-              class="refresh-btn"
-            >
+            <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
+              :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+              :on-update:page="changePage" :on-update:page-size="changePageSize" />
+            <n-button type="primary" @click="getSongs" circle size="small" class="refresh-btn">
               <template #icon>
                 <n-icon :component="RefreshIcon" />
               </template>
             </n-button>
           </div>
           <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
-          <div class="pagination">
-            <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-              :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-              :on-update:page="changePage" :on-update:page-size="changePageSize" />
-          </div>
         </div>
       </n-gi>
     </n-grid>
@@ -309,6 +292,10 @@ async function getData() {
   playlist.loading = true;
   const result = await playlistApi.getList(uid, 1, 10000);
   playlist.options = playlist.options.concat(result.playlist);
+  if (playlist.options.length > 0) {
+    playlist.id = playlist.options[0].id;
+    getSongs();
+  }
   playlist.loading = false;
 }
 
@@ -317,8 +304,8 @@ onMounted(getData);
 
 <style lang="scss" scoped>
 .playlist-container {
-  padding: 20px;
-  height: 100vh;
+  height: calc(100vh - 60px);
+  overflow: hidden;
 }
 
 .playlist-list {
@@ -366,7 +353,7 @@ onMounted(getData);
   padding: 20px;
   margin-left: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  height: calc(100vh - 100px);
+  height: 100%;
   display: flex;
   flex-direction: column;
 
@@ -397,8 +384,13 @@ onMounted(getData);
   margin-top: 6px !important;
 }
 
-.n-space {
+.playlist-list .n-space {
   flex-flow: row nowrap !important;
   gap: 8px 0px !important;
+}
+
+.playlist-container .n-data-table-wrapper {
+  height: calc(100vh - 200px) !important;
+  overflow-y: auto !important;
 }
 </style>
