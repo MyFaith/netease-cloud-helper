@@ -17,44 +17,37 @@
 
       <n-gi :span="20">
         <div class="content-box">
-          <div class="pagination-header">
-            <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-              :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
-              :on-update:page="changePage" :on-update:page-size="changePageSize" />
-            <n-button type="primary" @click="getSongs" circle size="small" class="refresh-btn">
-              <template #icon>
-                <n-icon :component="RefreshIcon" />
-              </template>
-            </n-button>
+          <div class="header-controls">
+            <div class="left-controls">
+            </div>
+            <div class="right-controls">
+              <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
+                :item-count="pagination.itemCount" show-size-picker :page-sizes="[100, 500, 1000, 3000, 5000, 10000]"
+                :on-update:page="changePage" :on-update:page-size="changePageSize" />
+              <n-button type="primary" @click="getSongs" circle size="small" class="refresh-btn">
+                <template #icon>
+                  <n-icon :component="RefreshIcon" />
+                </template>
+              </n-button>
+            </div>
           </div>
           <n-data-table :columns="table.columns" :data="table.dataList" :loading="table.loading" striped />
         </div>
       </n-gi>
     </n-grid>
   </div>
-  <MatchPlaylist ref="matchPlaylist" :row="rowData" />
 </template>
 
 <script setup>
 import * as playlistApi from "@/api/playlist";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils";
-import { NAvatar, NButton, NImage, NSpace, NMenu, NScrollbar, NGrid, NGi } from "naive-ui";
+import { NAvatar, NButton, NImage, NSpace, NMenu, NScrollbar, NGrid, NGi, useMessage } from "naive-ui";
 import { h, onMounted, reactive, ref, computed } from "vue";
-import MatchPlaylist from "@/components/match/playlist.vue";
 import { RefreshOutline as RefreshIcon } from '@vicons/ionicons5';
 
 const userStore = useUserStore();
-
-// 弹窗数据
-const rowData = ref({});
-const matchPlaylist = ref(null);
-
-// 匹配歌曲信息
-function match(row) {
-  rowData.value = row;
-  matchPlaylist.value.openModal();
-}
+const message = useMessage();
 
 // 来源
 function getEnumT(key) {
@@ -87,16 +80,6 @@ function getEnumOriginCoverType(key) {
   return enums[key];
 }
 
-// 判断是否无版权
-function isBlocked(song) {
-  if (song.subp != 0 || song.realPayed === 1) {
-    return false;
-  }
-  if (song.pc) {
-    return false;
-  }
-  return true;
-}
 
 // 表格配置
 const table = reactive({
@@ -127,21 +110,6 @@ const table = reactive({
       title: "专辑",
       key: "al.name"
     },
-    {
-      title: "版权",
-      key: "isBlocked",
-      width: 100,
-      render: (row) =>
-        !isBlocked(row.privileges)
-          ? "正常"
-          : h(
-            "font",
-            { color: "red" },
-            {
-              default: () => "无版权"
-            }
-          )
-    },
     /* {
       title: "来源",
       key: "t",
@@ -168,36 +136,9 @@ const table = reactive({
     },
     {
       title: "操作",
-      filterMultiple: false,
-      defaultFilterOptionValues: [1],
-      filterOptions: [
-        {
-          label: "全部",
-          value: 1
-        },
-        {
-          label: "无版权歌曲",
-          value: -1
-        }
-      ],
-      filter(value, row) {
-        const blocked = isBlocked(row.privileges);
-        return value === -1 ? blocked : true;
-      },
       render: (row) =>
         h(NSpace, null, {
-          default: () => [
-            h(
-              NButton,
-              {
-                disabled: !isBlocked(row.privileges),
-                size: "small",
-                type: "warning",
-                onClick: () => match(row)
-              },
-              { default: () => "匹配云盘文件" }
-            )
-          ]
+          default: () => []
         })
     }
   ]
@@ -288,15 +229,27 @@ const playlist = reactive({
 
 // 获取数据
 async function getData() {
+  // 检查用户是否已登录并且有账号ID
+  if (!userStore.account || !userStore.account.id) {
+    console.warn('用户未登录或账号信息不完整');
+    return;
+  }
+
   const uid = userStore.account.id;
   playlist.loading = true;
-  const result = await playlistApi.getList(uid, 1, 10000);
-  playlist.options = playlist.options.concat(result.playlist);
-  if (playlist.options.length > 0) {
-    playlist.id = playlist.options[0].id;
-    getSongs();
+  try {
+    const result = await playlistApi.getList(uid, 1, 10000);
+    playlist.options = playlist.options.concat(result.playlist);
+    if (playlist.options.length > 0) {
+      playlist.id = playlist.options[0].id;
+      getSongs();
+    }
+  } catch (error) {
+    console.error('获取歌单数据失败:', error);
+    message.error('获取歌单数据失败，请检查网络连接');
+  } finally {
+    playlist.loading = false;
   }
-  playlist.loading = false;
 }
 
 onMounted(getData);
@@ -372,6 +325,29 @@ onMounted(getData);
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+
+  .refresh-btn {
+    margin-left: 12px;
+  }
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .left-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
   .refresh-btn {
     margin-left: 12px;

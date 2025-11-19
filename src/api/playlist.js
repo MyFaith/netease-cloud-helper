@@ -29,3 +29,16 @@ export function getSongList(id, page = 1, limit = 30) {
     }
   });
 }
+
+/**
+ * 获取歌单内所有歌曲（无分页）
+ * @param {*} id 歌单ID
+ */
+export function getAllSongs(id) {
+  return http.get("/playlist/track/all", {
+    params: {
+      id,
+      limit: 100000 // 设置一个足够大的数字来获取所有歌曲
+    }
+  });
+}

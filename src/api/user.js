@@ -62,3 +62,43 @@ export function getRecentPlays() {
     }
   });
 }
+
+/**
+ * 手机号登录
+ * @param {*} phone 手机号
+ * @param {*} password 密码
+ */
+export function loginCellphone(phone, password) {
+  return http.get("/login/cellphone", {
+    params: {
+      phone,
+      password
+    }
+  });
+}
+
+/**
+ * 邮箱登录
+ * @param {*} email 邮箱
+ * @param {*} password 密码
+ */
+export function loginEmail(email, password) {
+  return http.get("/login", {
+    params: {
+      email,
+      password
+    }
+  });
+}
+
+/**
+ * 使用cookie登录
+ * @param {*} cookie cookie字符串
+ */
+export function loginWithCookie(cookie) {
+  return http.get("/user/account", {
+    params: {
+      cookie
+    }
+  });
+}
